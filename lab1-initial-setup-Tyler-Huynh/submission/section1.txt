@@ -1,0 +1,22 @@
+(base) Tylers-M1-Macbook-Pro:lab1-initial-setup-Tyler-Huynh tylerhuynh$ git add .
+(base) Tylers-M1-Macbook-Pro:lab1-initial-setup-Tyler-Huynh tylerhuynh$ git commit -m "Created test.txt file, wrote Hello World!!"
+[main f0673be] Created test.txt file, wrote Hello World!!
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+ create mode 100644 Screen Shot 2022-01-20 at 11.37.03 AM.png
+ create mode 100644 section1.txt
+(base) Tylers-M1-Macbook-Pro:lab1-initial-setup-Tyler-Huynh tylerhuynh$ git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+(base) Tylers-M1-Macbook-Pro:lab1-initial-setup-Tyler-Huynh tylerhuynh$ git push
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (5/5), 1.16 MiB | 2.13 MiB/s, done.
+Total 5 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/cub-csci-3308-spring-2022/lab1-initial-setup-Tyler-Huynh.git
+   0f4df53..f0673be  main -> main

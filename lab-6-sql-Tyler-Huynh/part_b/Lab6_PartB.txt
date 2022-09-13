@@ -1,0 +1,186 @@
+Lab #6 Take Home
+Your name: Tyler Huynh
+
+
+---------------------------------------- Question 1 Query ---------------------------------------- 
+SELECT *
+FROM products
+WHERE product_name LIKE '%r%' AND product_name LIKE '%j%';
+
+RESULTS:
+ product_id |       product_name        | category_id | quantity_per_unit  | unit_price | units_in_stock | units_on_order | reorder_level | discontinu
+ed 
+------------+---------------------------+-------------+--------------------+------------+----------------+----------------+---------------+-----------
+---
+         30 | Nord-Ost Matjeshering     |           8 | 10 - 200 g glasses |      25.89 |             10 |              0 |            15 |           
+ 0
+         51 | Manjimup Dried Apples     |           7 | 50 - 300 g pkgs.   |         53 |             20 |              0 |            10 |           
+ 0
+         67 | Laughing Lumberjack Lager |           1 | 24 - 12 oz bottles |         14 |             52 |              0 |            10 |           
+ 0
+(3 rows)
+
+----------------------
+------------------ Question 2 Query ---------------------------------------- 
+SELECT MAX(unit_price), MIN(unit_price), AVG(unit_price)
+FROM order_details;
+
+RESULTS:
+  max  | min |        avg        
+-------+-----+-------------------
+ 263.5 |   2 | 24.59025131313185
+(1 row)
+
+---------------------------------------- Question 3 Query ---------------------------------------- 
+SELECT MAX(unit_price), category_id
+AS category_id
+FROM products
+GROUP BY category_id
+ORDER BY category_id DESC;
+
+RESULTS:
+  max   | category_id 
+--------+-------------
+   62.5 |           8
+     53 |           7
+ 123.79 |           6
+     38 |           5
+     55 |           4
+     81 |           3
+   43.9 |           2
+  263.5 |           1
+(8 rows)
+
+---------------------------------------- Question 4 Query ---------------------------------------- 
+CREATE VIEW customer_total //Creating a view and then joining two tables together with the same data types
+        AS 
+			SELECT customers.company_name, COUNT(DISTINCT orders.order_id)
+			AS total_orders
+			FROM orders
+			INNER JOIN customers ON orders.customer_id = customers.customer_id
+			GROUP BY customers.company_name
+			ORDER BY COUNT(*) DESC;
+
+SELECT company_name, total_orders   //Accessing the view
+FROM customer_total
+WHERE total_orders > 15;
+
+RESULTS:
+         company_name         | total_orders 
+------------------------------+--------------
+ Save-a-lot Markets           |           31
+ Ernst Handel                 |           30
+ QUICK-Stop                   |           28
+ Hungry Owl All-Night Grocers |           19
+ Folk och fä HB               |           19
+ HILARION-Abastos             |           18
+ Berglunds snabbköp           |           18
+ Rattlesnake Canyon Grocery   |           18
+ Bon app'                     |           17
+(9 rows)
+
+---------------------------------------- Question 5 Query ---------------------------------------- 
+CREATE VIEW freight_weight_brazil
+	AS
+		SELECT orders.order_id, orders.freight, order_details.quantity, order_details.discount, customers.country
+		FROM orders
+		INNER JOIN order_details ON orders.order_id = order_details.order_id
+		INNER JOIN customers ON orders.customer_id = customers.customer_id
+		WHERE freight > 100;
+
+SELECT *
+FROM freight_weight_brazil
+WHERE country = 'Brazil';
+
+RESULTS:
+ order_id | freight | quantity | discount | country 
+----------+---------+----------+----------+---------
+    10372 |  890.78 |       12 |     0.25 | Brazil
+    10372 |  890.78 |       40 |     0.25 | Brazil
+    10372 |  890.78 |       70 |     0.25 | Brazil
+    10372 |  890.78 |       42 |     0.25 | Brazil
+    10406 |  108.04 |       10 |        0 | Brazil
+    10406 |  108.04 |       30 |      0.1 | Brazil
+    10406 |  108.04 |       42 |      0.1 | Brazil
+    10406 |  108.04 |        5 |      0.1 | Brazil
+    10406 |  108.04 |        2 |      0.1 | Brazil
+    10637 |  201.29 |       10 |        0 | Brazil
+    10637 |  201.29 |       25 |     0.05 | Brazil
+    10637 |  201.29 |       60 |     0.05 | Brazil
+    10650 |  176.81 |       30 |        0 | Brazil
+    10650 |  176.81 |       25 |     0.05 | Brazil
+    10650 |  176.81 |       30 |        0 | Brazil
+    10659 |  105.81 |       20 |     0.05 | Brazil
+    10659 |  105.81 |       24 |     0.05 | Brazil
+    10659 |  105.81 |       40 |     0.05 | Brazil
+(18 rows)
+
+---------------------------------------- Question 6 Query ---------------------------------------- 
+SELECT city, COUNT(city)
+AS maximum_customers_live
+FROM customers
+GROUP BY city
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+
+RESULTS:
+  city  | maximum_customers_live 
+--------+------------------------
+ London |                      6
+(1 row)
+										
+---------------------------------------- Question 7 Query ---------------------------------------- 
+CREATE VIEW ship_to_mexico 
+	AS
+		SELECT order_details.order_id, order_details.product_id, products.product_name, orders.ship_country
+		FROM orders
+		INNER JOIN order_details ON orders.order_id = order_details.order_id
+		INNER JOIN products ON products.product_id = order_details.product_id;
+
+SELECT DISTINCT product_name, ship_country
+FROM ship_to_mexico
+WHERE ship_country = 'Mexico';
+
+
+RESULTS:
+          product_name          | ship_country 
+-------------------------------+--------------
+ Konbu                         | Mexico
+ Perth Pasties                 | Mexico
+ Guaraná Fantástica            | Mexico
+ Louisiana Hot Spiced Okra     | Mexico
+ Ipoh Coffee                   | Mexico
+ Sasquatch Ale                 | Mexico
+ Gumbär Gummibärchen           | Mexico
+ Raclette Courdavault          | Mexico
+ Rössle Sauerkraut             | Mexico
+ Rogede sild                   | Mexico
+ Boston Crab Meat              | Mexico
+ Singaporean Hokkien Fried Mee | Mexico
+ Geitost                       | Mexico
+ Ikura                         | Mexico
+ Laughing Lumberjack Lager     | Mexico
+ Gudbrandsdalsost              | Mexico
+ Flotemysost                   | Mexico
+ Chai                          | Mexico
+ Tofu                          | Mexico
+ Rhönbräu Klosterbier          | Mexico
+ Filo Mix                      | Mexico
+ Thüringer Rostbratwurst       | Mexico
+ Maxilaku                      | Mexico
+ Vegie-spread                  | Mexico
+ Camembert Pierrot             | Mexico
+ Outback Lager                 | Mexico
+ Queso Cabrales                | Mexico
+ Gula Malacca                  | Mexico
+ Carnarvon Tigers              | Mexico
+ Sir Rodney's Scones           | Mexico
+ Teatime Chocolate Biscuits    | Mexico
+ Ravioli Angelo                | Mexico
+ Gravad lax                    | Mexico
+ Alice Mutton                  | Mexico
+ Côte de Blaye                 | Mexico
+ Gorgonzola Telino             | Mexico
+ Chocolade                     | Mexico
+ Lakkalikööri                  | Mexico
+(38 rows)
